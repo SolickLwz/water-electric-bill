@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>和顺家园水电费统计</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; min-height: 100vh; font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; overflow-x: hidden; position: relative; }
+        
+        body {
+            background: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        @keyframes bgParallax {
+            0% { background-position: 50% 50%; }
+            50% { background-position: 50% 45%; }
+            100% { background-position: 50% 50%; }
+        }
+        
+        .container { 
+            width: 100%; 
+            min-height: 100vh; 
+            padding: 0; 
+            margin: 0;
+            animation: fadeInUp 0.8s ease-out; 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            overflow-y: auto;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes swing {
+            20% { transform: rotate(15deg); }
+            40% { transform: rotate(-10deg); }
+            60% { transform: rotate(5deg); }
+            80% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes tada {
+            0% { transform: scale(1); }
+            10%, 20% { transform: scale(0.9) rotate(-3deg); }
+            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+        
+        @keyframes bounceInDown {
+            0% { opacity: 0; transform: translateY(-200px); }
+            60% { opacity: 1; transform: translateY(20px); }
+            80% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+        
+        @keyframes flipInX {
+            0% { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+            40% { transform: perspective(400px) rotateX(-10deg); }
+            70% { transform: perspective(400px) rotateX(10deg); }
+            100% { transform: perspective(400px) rotateX(0deg); opacity: 1; }
+        }
+        
+        @keyframes flipInY {
+            0% { transform: perspective(400px) rotateY(90deg); opacity: 0; }
+            40% { transform: perspective(400px) rotateY(-10deg); }
+            70% { transform: perspective(400px) rotateY(10deg); }
+            100% { transform: perspective(400px) rotateY(0deg); opacity: 1; }
+        }
+        
+        @keyframes flipInLeft {
+            0% { transform: perspective(400px) rotateY(-90deg); opacity: 0; }
+            40% { transform: perspective(400px) rotateY(10deg); }
+            70% { transform: perspective(400px) rotateY(-5deg); }
+            100% { transform: perspective(400px) rotateY(0deg); opacity: 1; }
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); 
+            border-radius: 0; 
+            padding: 4% 5%; 
+            margin: 0; 
+            text-align: center; 
+            box-shadow: 0 8px 32px rgba(17, 153, 142, 0.4);
+            animation: flipInX 1s ease-out;
+            width: 100%;
+            position: relative;
+        }
+        
+        .header h1 { 
+            color: white; 
+            font-size: 5.5vw; 
+            font-weight: 700; 
+            margin-bottom: 1%; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
+            animation: flipInX 1s ease-out 0.3s both;
+            letter-spacing: 3px;
+        }
+        .header p { 
+            color: rgba(255,255,255,0.9); 
+            font-size: 3vw; 
+            animation: flipInY 1s ease-out 0.6s both;
+        }
+        
+        .tab-container { 
+            display: flex; 
+            background: rgba(255,255,255,0.9); 
+            backdrop-filter: blur(10px);
+            border-radius: 0; 
+            padding: 1.5% 1%; 
+            margin: 0; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            animation: flipInLeft 0.8s ease-out 0.2s both;
+            width: 100%;
+        }
+        .tab { 
+            flex: 1; 
+            padding: 3% 2%; 
+            text-align: center; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 2.8vw; 
+            font-weight: 600; 
+            color: #666; 
+            transition: all 0.3s ease; 
+            position: relative;
+        }
+        .tab:nth-child(2) { animation: flipInX 0.8s ease-out 0.2s both; }
+        .tab:nth-child(3) { animation: swing 1s ease-out 0.4s both; transform-origin: top center; }
+        .tab:nth-child(4) { animation: flipInY 0.8s ease-out 0.6s both; }
+        .tab:nth-child(5) { animation: tada 1s ease-out 0.8s both; }
+        .tab::after { content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 3px; background: #11998e; transform: scaleX(0); transition: transform 0.3s ease; }
+        .tab.active { color: #11998e; background: rgba(17, 153, 142, 0.1); }
+        .tab.active::after { transform: scaleX(1); }
+        .tab:hover { transform: translateY(-3px); }
+        
+        .content-wrapper {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            animation: fadeIn 0.6s ease-out 0.4s both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 0; 
+            padding: 0; 
+            margin: 0;
+            box-shadow: none;
+            animation: flipInLeft 0.8s ease-out 0.5s both;
+            min-height: calc(100vh - 200px);
+            width: 100%;
+        }
+        
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.5s ease-out; }
+        
+        .form-group input, .form-group select { 
+            width: 100%; 
+            padding: 2.5%; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 8px; 
+            font-size: 2.8vw; 
+            transition: all 0.3s ease; 
+            background: rgba(255,255,255,0.8);
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #11998e; box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.2); }
+        
+        .btn { 
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); 
+            color: white; 
+            border: none; 
+            padding: 2.5% 5%; 
+            border-radius: 8px; 
+            font-size: 2.8vw; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: flipInX 0.6s ease-out;
+        }
+        .btn:nth-child(2) { animation-delay: 0.1s; }
+        .btn:nth-child(3) { animation-delay: 0.2s; }
+        .btn:nth-child(4) { animation-delay: 0.3s; }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        .btn:hover { 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+        }
+        .btn:hover::before { left: 100%; }
+        .btn:active { transform: translateY(-1px); }
+        .btn-secondary { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
+        .btn-download { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+        .btn-upload { background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); }
+        .btn-print { background: linear-gradient(135deg, #28a745 0%, #218838 100%); }
+        .btn-camera { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); }
+        
+        .add-btn, .del-btn { 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            border: none; 
+            font-size: 20px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            flex-shrink: 0;
+            animation: bounceIn 0.4s ease-out;
+        }
+        .add-btn { background: #28a745; color: white; }
+        .add-btn:hover { transform: scale(1.15); box-shadow: 0 3px 12px rgba(40, 167, 69, 0.6); }
+        .del-btn { background: #dc3545; color: white; }
+        .del-btn:hover { transform: scale(1.15); box-shadow: 0 3px 12px rgba(220, 53, 69, 0.6); }
+        
+        .room-list-container { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 8px; 
+            padding: 3%; 
+            margin: 1.5%; 
+            max-height: 150px; 
+            overflow-y: auto;
+            animation: flipInLeft 0.6s ease-out 0.6s both;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .room-list-container h3 { margin-bottom: 2%; color: #fff; font-size: 2.8vw; animation: fadeIn 0.6s ease-out; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .room-list { display: flex; flex-wrap: wrap; gap: 2%; }
+        .room-tag { 
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); 
+            color: #fff; 
+            padding: 2% 4%; 
+            border-radius: 20px; 
+            font-size: 2.4vw; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            animation: bounceIn 0.3s ease-out;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .room-tag:nth-child(2) { animation-delay: 0.05s; }
+        .room-tag:nth-child(3) { animation-delay: 0.1s; }
+        .room-tag:nth-child(4) { animation-delay: 0.15s; }
+        .room-tag:nth-child(5) { animation-delay: 0.2s; }
+        .room-tag:hover { transform: scale(1.1); background: linear-gradient(135deg, #5a6578 0%, #3d4758 100%); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .room-tag.active { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); box-shadow: 0 4px 12px rgba(17, 153, 142, 0.5); }
+        
+        .table-container { 
+            overflow-x: auto; 
+            margin: 1.5%; 
+            border-radius: 8px; 
+            border: 1px solid rgba(221,221,221,0.5);
+            animation: fadeInUp 0.5s ease-out 0.7s both;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th, td { padding: 2%; text-align: center; border-bottom: 1px solid #e0e0e0; font-size: 2.4vw; color: #333; }
+        th { background: #f8f9fa; font-weight: 600; color: #495057; }
+        .input-cell { 
+            width: 100%; 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            padding: 5%; 
+            text-align: center; 
+            font-size: 2.4vw; 
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        .input-cell:focus { outline: none; border-color: #11998e; box-shadow: 0 0 0 2px rgba(17, 153, 142, 0.2); }
+        .input-cell.unread { color: #6c757d; font-style: italic; }
+        .note-input { width: 100%; border: none; border-bottom: 1px dashed #ddd; padding: 2%; font-size: 2vw; color: #666; background: transparent; }
+        
+        .price-display { 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(20px);
+            border-radius: 8px; 
+            padding: 3%; 
+            margin: 1.5%; 
+            text-align: center; 
+            font-size: 3vw; 
+            color: #856404;
+            animation: fadeInUp 0.5s ease-out 0.8s both;
+            border: 1px solid rgba(221,221,221,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .price-display span { font-weight: 700; color: #11998e; }
+        
+        .water-type-cell { display: flex; align-items: center; gap: 8px; justify-content: center; }
+        .water-type { padding: 4px 12px; background: rgba(56, 239, 125, 0.2); border-radius: 4px; font-size: 2.2vw; color: #38ef7d; border: 1px solid rgba(56, 239, 125, 0.3); }
+        .gradient-text { background: linear-gradient(135deg, #11998e 0%, #38ef7d 50%, #ffc107 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+        
+        .toggle-unread { 
+            background: rgba(255, 193, 7, 0.3); 
+            color: #fff; 
+            border: 1px solid rgba(255, 193, 7, 0.5); 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 2vw; 
+            cursor: pointer;
+            transition: all 0.2s ease;
+            animation: bounceIn 0.3s ease-out;
+        }
+        .toggle-unread:hover { transform: scale(1.1); background: rgba(255, 193, 7, 0.5); }
+        
+        .config-panel { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(20px);
+            border-radius: 8px; 
+            padding: 4%; 
+            margin: 1.5%; 
+            border-left: 4px solid #38ef7d;
+            animation: fadeInUp 0.5s ease-out 0.9s both;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .config-panel h3 { margin-bottom: 3%; color: #fff; font-size: 3vw; animation: fadeIn 0.6s ease-out; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 3%; padding: 3%; margin: 1.5%; background: rgba(255,255,255,0.95); border-radius: 8px; border: 1px solid rgba(221,221,221,0.5); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stat-card { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 4%; 
+            border-radius: 12px; 
+            text-align: center;
+            animation: flipInX 0.5s ease-out;
+            transition: all 0.3s ease;
+        }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.3s; }
+        .stat-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5); }
+        .stat-card .value { font-size: 4vw; font-weight: 700; display: block; }
+        .stat-card .label { font-size: 2.4vw; opacity: 0.9; margin-top: 2%; }
+        
+        .date-range { 
+            display: flex; 
+            gap: 2%; 
+            align-items: center; 
+            font-size: 2.6vw; 
+            margin: 1.5%; 
+            margin-bottom: 0;
+            color: #333; 
+            animation: flipInLeft 0.6s ease-out 0.5s both;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 3%;
+            border-radius: 8px;
+            border: 1px solid rgba(221,221,221,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .date-range input { flex: 1; background: rgba(255,255,255,0.8); border: 1px solid #ddd; border-radius: 6px; color: #333; padding: 2%; }
+        .date-range input::-webkit-calendar-picker-indicator { filter: none; }
+        .date-range span { color: #11998e; font-weight: 600; }
+        
+        .action-btns { display: flex; gap: 1.5%; margin: 1.5%; flex-wrap: wrap; }
+        .action-btns .btn { flex: 1; min-width: 45%; }
+        
+        .hidden { display: none; }
+        
+        .history-panel { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(20px);
+            border-radius: 8px; 
+            padding: 3%; 
+            margin: 1.5%;
+            animation: fadeInUp 0.5s ease-out 1s both;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .history-panel h4 { margin-bottom: 2%; color: #fff; font-size: 2.6vw; animation: fadeIn 0.6s ease-out; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .history-list { max-height: 200px; overflow-y: auto; }
+        .history-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 2%; 
+            border-bottom: 1px dashed rgba(255,255,255,0.2); 
+            cursor: pointer;
+            transition: all 0.2s ease;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        .history-item:nth-child(2) { animation-delay: 0.05s; }
+        .history-item:nth-child(3) { animation-delay: 0.1s; }
+        .history-item:hover { background: rgba(255,255,255,0.1); transform: translateX(8px); }
+        .history-date { font-weight: 600; color: rgba(255,255,255,0.9); }
+        .history-count { color: rgba(255,255,255,0.6); font-size: 2.2vw; }
+        
+        .api-config { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(20px);
+            border-radius: 8px; 
+            padding: 3%; 
+            margin: 1.5%; 
+            border-left: 4px solid #007bff;
+            animation: fadeInUp 0.5s ease-out 1.1s both;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .api-config h4 { margin-bottom: 2%; color: #81d4fa; font-size: 2.6vw; animation: fadeIn 0.6s ease-out; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 3% 6%;
+            border-radius: 12px;
+            font-size: 3.5vw;
+            font-weight: 700;
+            color: white;
+            z-index: 9999;
+            animation: toastPop 1s ease-in-out;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .toast.error { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); }
+        .toast.warning-high { background: linear-gradient(135deg, #28a745 0%, #218838 100%); }
+        .toast.warning-low { background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); }
+        
+        @keyframes toastPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            30% { transform: translate(-50%, -50%) scale(1.1); }
+            50% { transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+        }
+        
+        @media print {
+            body { background: white; animation: none; }
+            .tab-container, .btn, .room-list-container, .config-panel, .api-config, .camera-section, .toast { display: none; }
+            .content { padding: 0; }
+            table { min-width: 100%; }
+            th, td { font-size: 10pt; padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>和顺家园水电费统计</h1>
+            <p>智能管理 · 精准计算 · 数据持久化</p>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab active" data-tab="electric">电费记录</div>
+            <div class="tab" data-tab="water">水费记录</div>
+            <div class="tab" data-tab="summary">水电费合计</div>
+            <div class="tab" data-tab="data">数据管理</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="section active" id="electric">
+                <div class="date-range">
+                    <label>统计时间：</label>
+                    <input type="date" id="statStartDate" value="">
+                    <span>至</span>
+                    <input type="date" id="statEndDate" value="">
+                </div>
+                
+                <div class="room-list-container">
+                    <h3>房间列表</h3>
+                    <div class="room-list" id="electricRoomList">
+                        <span class="room-tag active" data-room="">选择房间</span>
+                    </div>
+                </div>
+                
+                <div id="electricRoomData" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%;">
+                        <h3 style="font-size: 3vw;"><span class="gradient-text">房号：<span id="currentElectricRoom">--</span></span></h3>
+                        <button class="del-btn" onclick="removeCurrentElectricRoom()">×</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="electricTable">
+                            <thead>
+                                <tr>
+                                    <th>用电方式</th>
+                                    <th>上次抄表度数（度）</th>
+                                    <th>本次抄表度数（度）</th>
+                                    <th>本次用电量（度）</th>
+                                    <th>本次实交电费（元）</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="action-btns">
+                    <button class="btn" onclick="saveBillData('electric')">保存电费记录</button>
+                    <button class="btn btn-print" onclick="printBill('electric')">🖨️ 打印电费表</button>
+                </div>
+                
+                <div class="camera-section">
+                    <button class="btn btn-camera" onclick="takePhotoAndRecognize()">📷 拍照识别数字</button>
+                </div>
+                
+                <div class="config-panel">
+                    <h3>电价设置</h3>
+                    <label style="display: block; margin-bottom: 1.5%; font-weight: 600; color: #333; font-size: 2.6vw;">电价（元/度）</label>
+                    <input type="number" id="electricPrice" value="0.85" step="0.01">
+                    <div class="price-display">当前电价：<span id="currentElectricPrice">0.85</span> 元/度</div>
+                    <button class="btn" onclick="addElectricRoom()">+ 添加房间</button>
+                </div>
+            </div>
+            
+            <div class="section" id="water">
+                <div class="date-range">
+                    <label>统计时间：</label>
+                    <input type="date" id="waterStatStartDate" value="">
+                    <span>至</span>
+                    <input type="date" id="waterStatEndDate" value="">
+                </div>
+                
+                <div class="room-list-container">
+                    <h3>房间列表</h3>
+                    <div class="room-list" id="waterRoomList">
+                        <span class="room-tag active" data-room="">选择房间</span>
+                    </div>
+                </div>
+                
+                <div id="waterRoomData" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2%;">
+                        <h3 style="font-size: 3vw;"><span class="gradient-text">房号：<span id="currentWaterRoom">--</span></span></h3>
+                        <button class="del-btn" onclick="removeCurrentWaterRoom()">×</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="waterTable">
+                            <thead>
+                                <tr>
+                                    <th>用水方式</th>
+                                    <th>上次抄表方数（方）</th>
+                                    <th>本次抄表方数（方）</th>
+                                    <th>本次用水量（方）</th>
+                                    <th>本次实交水费（元）</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="action-btns">
+                    <button class="btn" onclick="saveBillData('water')">保存水费记录</button>
+                    <button class="btn btn-print" onclick="printBill('water')">🖨️ 打印水费表</button>
+                </div>
+                
+                <div class="camera-section">
+                    <button class="btn btn-camera" onclick="takePhotoAndRecognize()">📷 拍照识别数字</button>
+                </div>
+                
+                <div class="config-panel">
+                    <h3>水价设置</h3>
+                    <label style="display: block; margin-bottom: 1.5%; font-weight: 600; color: #333; font-size: 2.6vw;">水价（元/方）</label>
+                    <input type="number" id="waterPrice" value="6" step="0.01">
+                    <div class="price-display">当前水价：<span id="currentWaterPrice">6</span> 元/方</div>
+                    <button class="btn" onclick="addWaterRoom()">+ 添加房间</button>
+                </div>
+            </div>
+            
+            <div class="section" id="summary">
+                <div class="date-range">
+                    <label>统计时间：</label>
+                    <input type="date" id="summaryStartDate" value="">
+                    <span>至</span>
+                    <input type="date" id="summaryEndDate" value="">
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="value" id="totalWater">¥0.00</span><span class="label">水费总计</span></div>
+                    <div class="stat-card"><span class="value" id="totalElectric">¥0.00</span><span class="label">电费总计</span></div>
+                    <div class="stat-card"><span class="value" id="totalSum">¥0.00</span><span class="label">合计金额</span></div>
+                    <div class="stat-card"><span class="value" id="roomCount">0</span><span class="label">房间数</span></div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="summaryTable">
+                        <thead>
+                            <tr><th>房号</th><th>水费+电费</th><th>合计</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="action-btns">
+                    <button class="btn btn-print" onclick="printBill('summary')">🖨️ 打印合计表</button>
+                    <button class="btn btn-download" onclick="downloadAllData()">📥 下载数据</button>
+                </div>
+            </div>
+            
+            <div class="section" id="data">
+                <div class="config-panel">
+                    <h3>数据管理</h3>
+                    <p style="color: #666; font-size: 2.4vw; margin-bottom: 3%;">点击下方按钮上传之前保存的JSON数据文件，系统会自动加载所有房间记录和价格设置。</p>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                    <button class="btn btn-upload" onclick="document.getElementById('fileInput').click()">📤 导入数据文件</button>
+                    <button class="btn btn-download" onclick="downloadAllData()">📥 下载当前数据</button>
+                    <button class="btn btn-secondary" onclick="clearAllData()" style="margin-top: 2%;">🗑️ 清空所有数据</button>
+                </div>
+                
+                <div class="history-panel">
+                    <h4>📜 历史数据记录</h4>
+                    <div class="history-list" id="historyList">
+                        <div style="text-align: center; color: #666; padding: 4%;">暂无历史数据</div>
+                    </div>
+                </div>
+                
+                <div class="api-config">
+                    <h4>🔑 百度AI识别配置</h4>
+                    <label style="display: block; margin-bottom: 1.5%; font-weight: 600; color: #333; font-size: 2.6vw;">API Key</label>
+                    <input type="text" id="baiduApiKey" placeholder="请输入百度AI API Key">
+                    <label style="display: block; margin-bottom: 1.5%; font-weight: 600; color: #333; font-size: 2.6vw;">Secret Key</label>
+                    <input type="text" id="baiduSecretKey" placeholder="请输入百度AI Secret Key">
+                    <button class="btn btn-secondary" onclick="saveApiConfig()">保存配置</button>
+                </div>
+                
+                <div id="uploadStatus" style="margin-top: 3%; padding: 3%; border-radius: 8px; display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_ELECTRIC_PRICE = 0.85;
+        const DEFAULT_WATER_PRICE = 6;
+        
+        let electricRecords = [];
+        let waterRecords = [];
+        let currentElectricRoom = null;
+        let currentWaterRoom = null;
+        let currentStatStartDate = '';
+        let currentStatEndDate = '';
+        
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        function parseDate(dateStr) {
+            return new Date(dateStr);
+        }
+        
+        function initDates() {
+            const today = new Date();
+            const todayStr = formatDate(today);
+            
+            let lastEndDate = findLatestRecordEndDate();
+            let startDate = '';
+            
+            if (lastEndDate) {
+                startDate = lastEndDate;
+            } else {
+                const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+                startDate = formatDate(lastMonth);
+            }
+            
+            document.getElementById('statStartDate').value = startDate;
+            document.getElementById('statEndDate').value = todayStr;
+            document.getElementById('waterStatStartDate').value = startDate;
+            document.getElementById('waterStatEndDate').value = todayStr;
+            document.getElementById('summaryStartDate').value = startDate;
+            document.getElementById('summaryEndDate').value = todayStr;
+            
+            currentStatStartDate = startDate;
+            currentStatEndDate = todayStr;
+        }
+        
+        function findLatestRecordEndDate() {
+            let latest = '';
+            
+            electricRecords.forEach(record => {
+                if (record.endDate > latest) latest = record.endDate;
+            });
+            
+            waterRecords.forEach(record => {
+                if (record.endDate > latest) latest = record.endDate;
+            });
+            
+            return latest;
+        }
+        
+        function syncDateChange(source) {
+            const start = document.getElementById('statStartDate').value;
+            const end = document.getElementById('statEndDate').value;
+            
+            if (source !== 'water') {
+                document.getElementById('waterStatStartDate').value = start;
+                document.getElementById('waterStatEndDate').value = end;
+            }
+            if (source !== 'summary') {
+                document.getElementById('summaryStartDate').value = start;
+                document.getElementById('summaryEndDate').value = end;
+            }
+            
+            currentStatStartDate = start;
+            currentStatEndDate = end;
+            
+            loadCurrentPeriodData();
+        }
+        
+        function loadCurrentPeriodData() {
+            refreshElectricRoomList();
+            refreshWaterRoomList();
+            updateSummary();
+        }
+        
+        function loadData() {
+            const saved = localStorage.getItem('billData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    electricRecords = data.electricRecords || [];
+                    waterRecords = data.waterRecords || [];
+                } catch (e) {
+                    console.error('Failed to load data:', e);
+                }
+            }
+            
+            loadApiConfig();
+            
+            document.getElementById('electricPrice').value = localStorage.getItem('electricPrice') || DEFAULT_ELECTRIC_PRICE;
+            document.getElementById('currentElectricPrice').textContent = document.getElementById('electricPrice').value;
+            document.getElementById('waterPrice').value = localStorage.getItem('waterPrice') || DEFAULT_WATER_PRICE;
+            document.getElementById('currentWaterPrice').textContent = document.getElementById('waterPrice').value;
+            
+            initDates();
+            refreshHistoryList();
+            loadCurrentPeriodData();
+        }
+        
+        function saveAllData() {
+            const data = {
+                electricRecords,
+                waterRecords
+            };
+            localStorage.setItem('billData', JSON.stringify(data));
+            localStorage.setItem('electricPrice', document.getElementById('electricPrice').value);
+            localStorage.setItem('waterPrice', document.getElementById('waterPrice').value);
+        }
+        
+        function downloadAllData() {
+            const data = {
+                electricRecords,
+                waterRecords,
+                price: {
+                    electric: document.getElementById('electricPrice').value,
+                    water: document.getElementById('waterPrice').value
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `水电费记录_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('数据已下载！');
+        }
+        
+        function uploadData(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.electricRecords) electricRecords = data.electricRecords;
+                    if (data.waterRecords) waterRecords = data.waterRecords;
+                    
+                    if (data.price) {
+                        if (data.price.electric) {
+                            document.getElementById('electricPrice').value = data.price.electric;
+                            document.getElementById('currentElectricPrice').textContent = data.price.electric;
+                        }
+                        if (data.price.water) {
+                            document.getElementById('waterPrice').value = data.price.water;
+                            document.getElementById('currentWaterPrice').textContent = data.price.water;
+                        }
+                    }
+                    
+                    saveAllData();
+                    initDates();
+                    refreshHistoryList();
+                    loadCurrentPeriodData();
+                    
+                    document.getElementById('uploadStatus').textContent = '数据加载成功！';
+                    document.getElementById('uploadStatus').style.display = 'block';
+                    document.getElementById('uploadStatus').style.background = '#d4edda';
+                    document.getElementById('uploadStatus').style.color = '#155724';
+                    setTimeout(() => document.getElementById('uploadStatus').style.display = 'none', 3000);
+                } catch (e) {
+                    document.getElementById('uploadStatus').textContent = '数据格式错误！';
+                    document.getElementById('uploadStatus').style.display = 'block';
+                    document.getElementById('uploadStatus').style.background = '#f8d7da';
+                    document.getElementById('uploadStatus').style.color = '#721c24';
+                    setTimeout(() => document.getElementById('uploadStatus').style.display = 'none', 3000);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function clearAllData() {
+            if (confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+                electricRecords = [];
+                waterRecords = [];
+                localStorage.removeItem('billData');
+                localStorage.removeItem('electricPrice');
+                localStorage.removeItem('waterPrice');
+                
+                document.getElementById('electricPrice').value = DEFAULT_ELECTRIC_PRICE;
+                document.getElementById('currentElectricPrice').textContent = DEFAULT_ELECTRIC_PRICE;
+                document.getElementById('waterPrice').value = DEFAULT_WATER_PRICE;
+                document.getElementById('currentWaterPrice').textContent = DEFAULT_WATER_PRICE;
+                
+                initDates();
+                refreshHistoryList();
+                loadCurrentPeriodData();
+                
+                alert('数据已清空');
+            }
+        }
+        
+        function refreshHistoryList() {
+            const list = document.getElementById('historyList');
+            const records = [];
+            
+            electricRecords.forEach(record => {
+                const key = `${record.startDate}~${record.endDate}`;
+                if (!records.find(r => r.key === key)) {
+                    records.push({ key, startDate: record.startDate, endDate: record.endDate, type: 'electric' });
+                }
+            });
+            
+            waterRecords.forEach(record => {
+                const key = `${record.startDate}~${record.endDate}`;
+                if (!records.find(r => r.key === key)) {
+                    records.push({ key, startDate: record.startDate, endDate: record.endDate, type: 'water' });
+                }
+            });
+            
+            records.sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+            
+            if (records.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #666; padding: 4%;">暂无历史数据</div>';
+                return;
+            }
+            
+            list.innerHTML = records.map(record => `
+                <div class="history-item" onclick="loadHistoryRecord('${record.startDate}', '${record.endDate}')">
+                    <span class="history-date">${record.startDate} 至 ${record.endDate}</span>
+                    <span class="history-count">${record.type === 'electric' ? '电费' : '水费'}</span>
+                </div>
+            `).join('');
+        }
+        
+        function loadHistoryRecord(startDate, endDate) {
+            if (!confirm(`确定要加载 ${startDate} 至 ${endDate} 的历史记录吗？\n当前未保存的数据将会丢失。`)) {
+                return;
+            }
+            document.getElementById('statStartDate').value = startDate;
+            document.getElementById('statEndDate').value = endDate;
+            syncDateChange('manual');
+        }
+        
+        function getLastReading(roomNo, type, isElectric) {
+            const records = isElectric ? electricRecords : waterRecords;
+            const sortedRecords = [...records].sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+            
+            for (const record of sortedRecords) {
+                const room = record.rooms.find(r => r.roomNo === roomNo);
+                if (room) {
+                    const types = isElectric ? room.electricTypes : room.waterTypes;
+                    const typeData = types.find(t => t.type === type);
+                    if (typeData) {
+                        if (typeData.currentReading && typeData.currentReading !== '未抄') {
+                            return typeData.currentReading;
+                        }
+                        if (typeData.lastReading && typeData.lastReading !== '未抄') {
+                            return typeData.lastReading;
+                        }
+                    }
+                }
+            }
+            return '';
+        }
+        
+        function getRoomTypes(roomNo, isElectric) {
+            const records = isElectric ? electricRecords : waterRecords;
+            const sortedRecords = [...records].sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+            
+            for (const record of sortedRecords) {
+                const room = record.rooms.find(r => r.roomNo === roomNo);
+                if (room) {
+                    const types = isElectric ? room.electricTypes : room.waterTypes;
+                    const result = [];
+                    types.forEach(typeData => {
+                        const lastReading = getLastReading(roomNo, typeData.type, isElectric);
+                        result.push({
+                            type: typeData.type,
+                            lastReading,
+                            currentReading: '',
+                            note: typeData.note || '',
+                            isUnread: false
+                        });
+                    });
+                    return result;
+                }
+            }
+            
+            return isElectric 
+                ? [{ type: '', lastReading: '', currentReading: '', note: '', isUnread: false }]
+                : [{ type: '冷水', lastReading: '', currentReading: '', note: '', isUnread: false }];
+        }
+        
+        function getCurrentPeriodRecord(isElectric) {
+            const start = document.getElementById(isElectric ? 'statStartDate' : 'waterStatStartDate').value;
+            const end = document.getElementById(isElectric ? 'statEndDate' : 'waterStatEndDate').value;
+            
+            const records = isElectric ? electricRecords : waterRecords;
+            return records.find(r => r.startDate === start && r.endDate === end);
+        }
+        
+        function getCurrentPeriodRoom(roomNo, isElectric) {
+            const record = getCurrentPeriodRecord(isElectric);
+            if (record) {
+                return record.rooms.find(r => r.roomNo === roomNo);
+            }
+            return null;
+        }
+        
+        function refreshElectricRoomList() {
+            const list = document.getElementById('electricRoomList');
+            list.innerHTML = '<span class="room-tag active" data-room="">选择房间</span>';
+            
+            const record = getCurrentPeriodRecord(true);
+            const currentRoomNos = record ? record.rooms.map(r => r.roomNo) : [];
+            
+            const roomNos = new Set(currentRoomNos);
+            
+            electricRecords.forEach(r => {
+                r.rooms.forEach(room => roomNos.add(room.roomNo));
+            });
+            
+            const otherRooms = Array.from(roomNos).filter(no => !currentRoomNos.includes(no)).sort((a, b) => parseInt(a) - parseInt(b));
+            const sortedCurrentRooms = [...currentRoomNos].sort((a, b) => parseInt(a) - parseInt(b));
+            const allRooms = [...sortedCurrentRooms, ...otherRooms];
+            
+            allRooms.forEach(roomNo => {
+                const tag = document.createElement('span');
+                tag.className = 'room-tag';
+                tag.dataset.room = roomNo;
+                tag.textContent = roomNo;
+                tag.addEventListener('click', () => selectElectricRoom(roomNo));
+                list.appendChild(tag);
+            });
+            
+            document.getElementById('electricRoomData').classList.add('hidden');
+            currentElectricRoom = null;
+        }
+        
+        function refreshWaterRoomList() {
+            const list = document.getElementById('waterRoomList');
+            list.innerHTML = '<span class="room-tag active" data-room="">选择房间</span>';
+            
+            const record = getCurrentPeriodRecord(false);
+            const currentRoomNos = record ? record.rooms.map(r => r.roomNo) : [];
+            
+            const roomNos = new Set(currentRoomNos);
+            
+            waterRecords.forEach(r => {
+                r.rooms.forEach(room => roomNos.add(room.roomNo));
+            });
+            
+            const otherRooms = Array.from(roomNos).filter(no => !currentRoomNos.includes(no)).sort((a, b) => parseInt(a) - parseInt(b));
+            const sortedCurrentRooms = [...currentRoomNos].sort((a, b) => parseInt(a) - parseInt(b));
+            const allRooms = [...sortedCurrentRooms, ...otherRooms];
+            
+            allRooms.forEach(roomNo => {
+                const tag = document.createElement('span');
+                tag.className = 'room-tag';
+                tag.dataset.room = roomNo;
+                tag.textContent = roomNo;
+                tag.addEventListener('click', () => selectWaterRoom(roomNo));
+                list.appendChild(tag);
+            });
+            
+            document.getElementById('waterRoomData').classList.add('hidden');
+            currentWaterRoom = null;
+        }
+        
+        function showSuccessToast(message) {
+            const existing = document.querySelector('.toast-message');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                z-index: 9999;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 1000);
+        }
+        
+        function addElectricRoom() {
+            const roomNo = prompt('请输入房号：', '101');
+            if (!roomNo) return;
+            
+            const record = getCurrentPeriodRecord(true);
+            
+            if (record && record.rooms.find(r => r.roomNo === roomNo)) {
+                alert('该房号已存在');
+                return;
+            }
+            
+            const electricTypes = getRoomTypes(roomNo, true);
+            
+            const newRoom = { roomNo, electricTypes };
+            
+            if (!record) {
+                electricRecords.push({
+                    startDate: document.getElementById('statStartDate').value,
+                    endDate: document.getElementById('statEndDate').value,
+                    rooms: [newRoom]
+                });
+            } else {
+                record.rooms.push(newRoom);
+            }
+            
+            saveAllData();
+            refreshElectricRoomList();
+            selectElectricRoom(roomNo);
+        }
+        
+        function selectElectricRoom(roomNo) {
+            document.querySelectorAll('#electricRoomList .room-tag').forEach(t => t.classList.remove('active'));
+            document.querySelector(`#electricRoomList .room-tag[data-room="${roomNo}"]`)?.classList.add('active');
+            
+            const record = getCurrentPeriodRecord(true);
+            let room = record ? record.rooms.find(r => r.roomNo === roomNo) : null;
+            
+            if (!room) {
+                const electricTypes = getRoomTypes(roomNo, true);
+                room = { roomNo, electricTypes };
+            }
+            
+            currentElectricRoom = room;
+            document.getElementById('currentElectricRoom').textContent = roomNo;
+            document.getElementById('electricRoomData').classList.remove('hidden');
+            renderElectricTable();
+        }
+        
+        function removeCurrentElectricRoom() {
+            if (!currentElectricRoom) return;
+            
+            const record = getCurrentPeriodRecord(true);
+            if (!record) return;
+            
+            if (confirm(`确定删除房间 ${currentElectricRoom.roomNo} 吗？`)) {
+                record.rooms = record.rooms.filter(r => r.roomNo !== currentElectricRoom.roomNo);
+                
+                if (record.rooms.length === 0) {
+                    electricRecords = electricRecords.filter(r => !(r.startDate === record.startDate && r.endDate === record.endDate));
+                }
+                
+                saveAllData();
+                refreshElectricRoomList();
+                updateSummary();
+            }
+        }
+        
+        function addElectricType() {
+            if (!currentElectricRoom) return;
+            
+            const typeName = prompt('请输入用电方式名称：', '三相');
+            if (!typeName) return;
+            
+            if (currentElectricRoom.electricTypes.find(t => t.type === typeName)) {
+                alert('该用电方式已存在');
+                return;
+            }
+            
+            const lastReading = getLastReading(currentElectricRoom.roomNo, typeName, true);
+            
+            currentElectricRoom.electricTypes.push({
+                type: typeName,
+                lastReading,
+                currentReading: '',
+                note: '',
+                isUnread: false
+            });
+            
+            saveAllData();
+            renderElectricTable();
+        }
+        
+        function removeElectricType(typeIndex) {
+            if (!currentElectricRoom || currentElectricRoom.electricTypes.length <= 1) {
+                alert('至少保留一种用电方式');
+                return;
+            }
+            
+            if (confirm('确定删除该用电方式？')) {
+                currentElectricRoom.electricTypes.splice(typeIndex, 1);
+                saveAllData();
+                renderElectricTable();
+            }
+        }
+        
+        function toggleElectricUnread(typeIndex) {
+            const type = currentElectricRoom.electricTypes[typeIndex];
+            type.isUnread = !type.isUnread;
+            type.currentReading = type.isUnread ? '未抄' : '';
+            saveAllData();
+            renderElectricTable();
+            calculateElectric();
+        }
+        
+        function updateElectricField(typeIndex, field, value) {
+            currentElectricRoom.electricTypes[typeIndex][field] = value;
+            if (field === 'currentReading') {
+                currentElectricRoom.electricTypes[typeIndex].isUnread = value === '未抄';
+            }
+            saveAllData();
+            calculateElectric();
+        }
+        
+        function renderElectricTable() {
+            const tbody = document.querySelector('#electricTable tbody');
+            tbody.innerHTML = '';
+            
+            if (!currentElectricRoom) return;
+            
+            currentElectricRoom.electricTypes.forEach((typeData, typeIndex) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="water-type">${typeData.type || '—'}</span></td>
+                    <td><input type="text" class="input-cell" value="${typeData.lastReading}" onchange="updateElectricField(${typeIndex}, 'lastReading', this.value)"></td>
+                    <td><input type="text" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateElectricField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td id="electricUsage-${typeIndex}">0</td>
+                    <td id="electricAmount-${typeIndex}">¥0.00</td>
+                    <td>
+                        <button class="toggle-unread" onclick="toggleElectricUnread(${typeIndex})">${typeData.isUnread ? '已抄' : '未抄'}</button>
+                        <button class="add-btn" onclick="addElectricType()">+</button>
+                        ${currentElectricRoom.electricTypes.length > 1 ? `<button class="del-btn" onclick="removeElectricType(${typeIndex})">×</button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            calculateElectric();
+        }
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 1000);
+        }
+        
+        function checkUsageAlert(isWater, roomNo, typeName, currentUsage) {
+            const records = isWater ? waterRecords : electricRecords;
+            const sortedRecords = [...records].sort((a, b) => new Date(b.endDate) - new Date(a.endDate));
+            
+            for (let i = 0; i < sortedRecords.length; i++) {
+                const record = sortedRecords[i];
+                const room = record.rooms.find(r => r.roomNo === roomNo);
+                if (!room) continue;
+                
+                const types = isWater ? room.waterTypes : room.electricTypes;
+                const typeData = types.find(t => (!t.type || t.type.trim() === '') ? (typeName === '') : (t.type === typeName));
+                
+                if (typeData && !typeData.isUnread && typeData.lastReading && typeData.currentReading) {
+                    const lastUsage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                    if (lastUsage > 0) {
+                        if (currentUsage > 10 && currentUsage > lastUsage * 1.5) {
+                            showToast('该用户用量变化过大！', 'warning-high');
+                        } else if (currentUsage > 50 && currentUsage < lastUsage * 0.5) {
+                            showToast('抄表数字是否过低？', 'warning-low');
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        
+        function calculateElectric() {
+            const price = parseFloat(document.getElementById('electricPrice').value) || DEFAULT_ELECTRIC_PRICE;
+            document.getElementById('currentElectricPrice').textContent = price.toFixed(2);
+            
+            if (!currentElectricRoom) return;
+            
+            currentElectricRoom.electricTypes.forEach((typeData, typeIndex) => {
+                let usage = 0;
+                let amount = 0;
+                
+                if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                    usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                    
+                    if (usage < 0 || usage < 1) {
+                        showToast('抄表内容可能有误！', 'error');
+                    } else {
+                        checkUsageAlert(false, currentElectricRoom.roomNo, typeData.type || '', usage);
+                    }
+                    
+                    usage = Math.max(0, usage);
+                    amount = usage * price;
+                }
+                
+                document.getElementById(`electricUsage-${typeIndex}`).textContent = usage.toFixed(2);
+                document.getElementById(`electricAmount-${typeIndex}`).textContent = `¥${amount.toFixed(2)}`;
+            });
+            
+            updateSummary();
+        }
+        
+        function addWaterRoom() {
+            const roomNo = prompt('请输入房号：', '101');
+            if (!roomNo) return;
+            
+            const record = getCurrentPeriodRecord(false);
+            
+            if (record && record.rooms.find(r => r.roomNo === roomNo)) {
+                alert('该房号已存在');
+                return;
+            }
+            
+            const waterTypes = getRoomTypes(roomNo, false);
+            
+            const newRoom = { roomNo, waterTypes };
+            
+            if (!record) {
+                waterRecords.push({
+                    startDate: document.getElementById('waterStatStartDate').value,
+                    endDate: document.getElementById('waterStatEndDate').value,
+                    rooms: [newRoom]
+                });
+            } else {
+                record.rooms.push(newRoom);
+            }
+            
+            saveAllData();
+            refreshWaterRoomList();
+            selectWaterRoom(roomNo);
+        }
+        
+        function selectWaterRoom(roomNo) {
+            document.querySelectorAll('#waterRoomList .room-tag').forEach(t => t.classList.remove('active'));
+            document.querySelector(`#waterRoomList .room-tag[data-room="${roomNo}"]`)?.classList.add('active');
+            
+            const record = getCurrentPeriodRecord(false);
+            let room = record ? record.rooms.find(r => r.roomNo === roomNo) : null;
+            
+            if (!room) {
+                const waterTypes = getRoomTypes(roomNo, false);
+                room = { roomNo, waterTypes };
+            }
+            
+            currentWaterRoom = room;
+            document.getElementById('currentWaterRoom').textContent = roomNo;
+            document.getElementById('waterRoomData').classList.remove('hidden');
+            renderWaterTable();
+        }
+        
+        function removeCurrentWaterRoom() {
+            if (!currentWaterRoom) return;
+            
+            const record = getCurrentPeriodRecord(false);
+            if (!record) return;
+            
+            if (confirm(`确定删除房间 ${currentWaterRoom.roomNo} 吗？`)) {
+                record.rooms = record.rooms.filter(r => r.roomNo !== currentWaterRoom.roomNo);
+                
+                if (record.rooms.length === 0) {
+                    waterRecords = waterRecords.filter(r => !(r.startDate === record.startDate && r.endDate === record.endDate));
+                }
+                
+                saveAllData();
+                refreshWaterRoomList();
+                updateSummary();
+            }
+        }
+        
+        function addWaterType() {
+            if (!currentWaterRoom) return;
+            
+            const typeName = prompt('请输入用水方式名称：', '热水');
+            if (!typeName) return;
+            
+            if (currentWaterRoom.waterTypes.find(t => t.type === typeName)) {
+                alert('该用水方式已存在');
+                return;
+            }
+            
+            const lastReading = getLastReading(currentWaterRoom.roomNo, typeName, false);
+            
+            currentWaterRoom.waterTypes.push({
+                type: typeName,
+                lastReading,
+                currentReading: '',
+                note: '',
+                isUnread: false
+            });
+            
+            saveAllData();
+            renderWaterTable();
+        }
+        
+        function removeWaterType(typeIndex) {
+            if (!currentWaterRoom || currentWaterRoom.waterTypes.length <= 1) {
+                alert('至少保留一种用水方式');
+                return;
+            }
+            
+            if (confirm('确定删除该用水方式？')) {
+                currentWaterRoom.waterTypes.splice(typeIndex, 1);
+                saveAllData();
+                renderWaterTable();
+            }
+        }
+        
+        function toggleWaterUnread(typeIndex) {
+            const type = currentWaterRoom.waterTypes[typeIndex];
+            type.isUnread = !type.isUnread;
+            type.currentReading = type.isUnread ? '未抄' : '';
+            saveAllData();
+            renderWaterTable();
+            calculateWater();
+        }
+        
+        function updateWaterField(typeIndex, field, value) {
+            currentWaterRoom.waterTypes[typeIndex][field] = value;
+            if (field === 'currentReading') {
+                currentWaterRoom.waterTypes[typeIndex].isUnread = value === '未抄';
+            }
+            saveAllData();
+            calculateWater();
+        }
+        
+        function renderWaterTable() {
+            const tbody = document.querySelector('#waterTable tbody');
+            tbody.innerHTML = '';
+            
+            if (!currentWaterRoom) return;
+            
+            currentWaterRoom.waterTypes.forEach((typeData, typeIndex) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="water-type">${typeData.type}</span></td>
+                    <td><input type="text" class="input-cell" value="${typeData.lastReading}" onchange="updateWaterField(${typeIndex}, 'lastReading', this.value)"></td>
+                    <td><input type="text" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateWaterField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td id="waterUsage-${typeIndex}">0</td>
+                    <td id="waterAmount-${typeIndex}">¥0.00</td>
+                    <td>
+                        <button class="toggle-unread" onclick="toggleWaterUnread(${typeIndex})">${typeData.isUnread ? '已抄' : '未抄'}</button>
+                        <button class="add-btn" onclick="addWaterType()">+</button>
+                        ${currentWaterRoom.waterTypes.length > 1 ? `<button class="del-btn" onclick="removeWaterType(${typeIndex})">×</button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(row);
+                
+                const noteRow = document.createElement('tr');
+                noteRow.innerHTML = `<td colspan="6"><input type="text" class="note-input" placeholder="备注（如：屋顶、一楼等）" value="${typeData.note}" onchange="updateWaterField(${typeIndex}, 'note', this.value)"></td>`;
+                tbody.appendChild(noteRow);
+            });
+            
+            calculateWater();
+        }
+        
+        function calculateWater() {
+            const price = parseFloat(document.getElementById('waterPrice').value) || DEFAULT_WATER_PRICE;
+            document.getElementById('currentWaterPrice').textContent = price.toFixed(2);
+            
+            if (!currentWaterRoom) return;
+            
+            currentWaterRoom.waterTypes.forEach((typeData, typeIndex) => {
+                let usage = 0;
+                let amount = 0;
+                
+                if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                    usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                    
+                    if (usage < 0 || usage < 1) {
+                        showToast('抄表内容可能有误！', 'error');
+                    } else {
+                        checkUsageAlert(true, currentWaterRoom.roomNo, typeData.type, usage);
+                    }
+                    
+                    usage = Math.max(0, usage);
+                    amount = usage * price;
+                }
+                
+                document.getElementById(`waterUsage-${typeIndex}`).textContent = usage.toFixed(2);
+                document.getElementById(`waterAmount-${typeIndex}`).textContent = `¥${amount.toFixed(2)}`;
+            });
+            
+            updateSummary();
+        }
+        
+        function saveBillData(type) {
+            const isElectric = type === 'electric';
+            const currentRoom = isElectric ? currentElectricRoom : currentWaterRoom;
+            if (!currentRoom) return;
+            
+            const startDate = document.getElementById(isElectric ? 'statStartDate' : 'waterStatStartDate').value;
+            const endDate = document.getElementById(isElectric ? 'statEndDate' : 'waterStatEndDate').value;
+            
+            let records = isElectric ? electricRecords : waterRecords;
+            let recordIndex = records.findIndex(r => r.startDate === startDate && r.endDate === endDate);
+            
+            if (recordIndex < 0) {
+                records.push({
+                    startDate,
+                    endDate,
+                    rooms: [currentRoom]
+                });
+                recordIndex = records.length - 1;
+            } else {
+                let roomIndex = records[recordIndex].rooms.findIndex(r => r.roomNo === currentRoom.roomNo);
+                if (roomIndex < 0) {
+                    records[recordIndex].rooms.push(currentRoom);
+                } else {
+                    records[recordIndex].rooms[roomIndex] = currentRoom;
+                }
+            }
+            
+            saveAllData();
+            refreshHistoryList();
+            updateSummary();
+            
+            showSuccessToast(`${isElectric ? '电费' : '水费'}记录保存成功`);
+            
+            const savedRecord = records[recordIndex];
+            const roomIndex = savedRecord.rooms.findIndex(r => r.roomNo === currentRoom.roomNo);
+            
+            if (roomIndex >= 0 && roomIndex < savedRecord.rooms.length - 1) {
+                const nextRoomNo = savedRecord.rooms[roomIndex + 1].roomNo;
+                
+                setTimeout(() => {
+                    if (isElectric) {
+                        selectElectricRoom(nextRoomNo);
+                    } else {
+                        selectWaterRoom(nextRoomNo);
+                    }
+                    
+                    setTimeout(() => {
+                        const roomDataEl = document.getElementById(isElectric ? 'electricRoomData' : 'waterRoomData');
+                        if (roomDataEl) {
+                            roomDataEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 50);
+                }, 50);
+            }
+        }
+        
+        function updateSummary() {
+            const start = document.getElementById('summaryStartDate').value;
+            const end = document.getElementById('summaryEndDate').value;
+            
+            const electricPrice = parseFloat(document.getElementById('electricPrice').value) || DEFAULT_ELECTRIC_PRICE;
+            const waterPrice = parseFloat(document.getElementById('waterPrice').value) || DEFAULT_WATER_PRICE;
+            
+            let totalWater = 0;
+            let totalElectric = 0;
+            const roomTotals = {};
+            
+            const waterRecord = waterRecords.find(r => r.startDate === start && r.endDate === end);
+            if (waterRecord) {
+                waterRecord.rooms.forEach(room => {
+                    let roomWater = 0;
+                    room.waterTypes.forEach(typeData => {
+                        if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                            const usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                            roomWater += Math.max(0, usage) * waterPrice;
+                        }
+                    });
+                    totalWater += roomWater;
+                    roomTotals[room.roomNo] = { water: roomWater, electric: 0 };
+                });
+            }
+            
+            const electricRecord = electricRecords.find(r => r.startDate === start && r.endDate === end);
+            if (electricRecord) {
+                electricRecord.rooms.forEach(room => {
+                    let roomElectric = 0;
+                    room.electricTypes.forEach(typeData => {
+                        if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                            const usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                            roomElectric += Math.max(0, usage) * electricPrice;
+                        }
+                    });
+                    totalElectric += roomElectric;
+                    
+                    if (!roomTotals[room.roomNo]) {
+                        roomTotals[room.roomNo] = { water: 0, electric: 0 };
+                    }
+                    roomTotals[room.roomNo].electric = roomElectric;
+                });
+            }
+            
+            document.getElementById('totalWater').textContent = `¥${totalWater.toFixed(2)}`;
+            document.getElementById('totalElectric').textContent = `¥${totalElectric.toFixed(2)}`;
+            document.getElementById('totalSum').textContent = `¥${(totalWater + totalElectric).toFixed(2)}`;
+            document.getElementById('roomCount').textContent = Object.keys(roomTotals).length;
+            
+            renderSummaryTable(roomTotals);
+        }
+        
+        function renderSummaryTable(roomTotals) {
+            const tbody = document.querySelector('#summaryTable tbody');
+            tbody.innerHTML = '';
+            
+            let grandTotal = 0;
+            
+            Object.keys(roomTotals).sort().forEach(roomNo => {
+                const totals = roomTotals[roomNo];
+                const sum = totals.water + totals.electric;
+                grandTotal += sum;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${roomNo}</td><td>¥${totals.water.toFixed(2)}+¥${totals.electric.toFixed(2)}</td><td>¥${sum.toFixed(2)}</td>`;
+                tbody.appendChild(row);
+            });
+            
+            const summaryRow = document.createElement('tr');
+            summaryRow.style.background = '#e8f5e9';
+            summaryRow.innerHTML = `<td><strong>合计</strong></td><td><strong>¥${document.getElementById('totalWater').textContent.substring(1)}+¥${document.getElementById('totalElectric').textContent.substring(1)}</strong></td><td><strong>¥${grandTotal.toFixed(2)}</strong></td>`;
+            tbody.appendChild(summaryRow);
+        }
+        
+        function saveApiConfig() {
+            const config = {
+                apiKey: document.getElementById('baiduApiKey').value,
+                secretKey: document.getElementById('baiduSecretKey').value
+            };
+            localStorage.setItem('baiduApiConfig', JSON.stringify(config));
+            alert('配置已保存');
+        }
+        
+        function loadApiConfig() {
+            const saved = localStorage.getItem('baiduApiConfig');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    document.getElementById('baiduApiKey').value = config.apiKey || 'HeGxTJziAeEdKt05P6pvZTZT';
+                    document.getElementById('baiduSecretKey').value = config.secretKey || '9t4TZE360R0y6P0Kj4k4v15DZC8fN4Aw';
+                } catch (e) {
+                    console.error('Failed to load API config:', e);
+                    document.getElementById('baiduApiKey').value = 'HeGxTJziAeEdKt05P6pvZTZT';
+                    document.getElementById('baiduSecretKey').value = '9t4TZE360R0y6P0Kj4k4v15DZC8fN4Aw';
+                }
+            } else {
+                document.getElementById('baiduApiKey').value = 'HeGxTJziAeEdKt05P6pvZTZT';
+                document.getElementById('baiduSecretKey').value = '9t4TZE360R0y6P0Kj4k4v15DZC8fN4Aw';
+            }
+        }
+        
+        // 摄像头预览界面
+        function createCameraOverlay() {
+            const overlay = document.createElement('div');
+            overlay.id = 'cameraOverlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            const video = document.createElement('video');
+            video.id = 'cameraVideo';
+            video.style.cssText = `
+                width: 90%;
+                max-width: 600px;
+                height: auto;
+                border-radius: 12px;
+                background: #000;
+            `;
+            video.setAttribute('playsinline', '');
+            
+            const captureBtn = document.createElement('button');
+            captureBtn.textContent = '📷 拍照识别';
+            captureBtn.style.cssText = `
+                margin-top: 20px;
+                padding: 15px 40px;
+                font-size: 18px;
+                background: linear-gradient(135deg, #11998e, #38ef7d);
+                color: white;
+                border: none;
+                border-radius: 30px;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(17, 153, 142, 0.5);
+            `;
+            
+            const uploadBtn = document.createElement('button');
+            uploadBtn.textContent = '📁 上传图片识别';
+            uploadBtn.style.cssText = `
+                margin-top: 10px;
+                padding: 12px 30px;
+                font-size: 16px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                border: none;
+                border-radius: 30px;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            `;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '✕ 关闭';
+            closeBtn.style.cssText = `
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border: 1px solid rgba(255,255,255,0.3);
+                border-radius: 20px;
+                cursor: pointer;
+            `;
+            
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            fileInput.id = 'imageUpload';
+            
+            captureBtn.onclick = () => captureAndRecognize(video);
+            uploadBtn.onclick = () => fileInput.click();
+            closeBtn.onclick = closeCameraOverlay;
+            
+            fileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    uploadAndRecognize(file);
+                }
+            };
+            
+            overlay.appendChild(closeBtn);
+            overlay.appendChild(video);
+            overlay.appendChild(captureBtn);
+            overlay.appendChild(uploadBtn);
+            overlay.appendChild(fileInput);
+            
+            document.body.appendChild(overlay);
+            return video;
+        }
+        
+        function closeCameraOverlay() {
+            const overlay = document.getElementById('cameraOverlay');
+            if (overlay) {
+                const video = document.getElementById('cameraVideo');
+                if (video && video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+                document.body.removeChild(overlay);
+            }
+        }
+        
+        async function takePhotoAndRecognize() {
+            const apiKey = document.getElementById('baiduApiKey').value;
+            const secretKey = document.getElementById('baiduSecretKey').value;
+            
+            if (!apiKey || !secretKey) {
+                alert('请先在数据管理页面配置百度AI API Key和Secret Key');
+                return;
+            }
+            
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('您的浏览器不支持摄像头功能');
+                    return;
+                }
+                
+                const video = createCameraOverlay();
+                
+                let stream = null;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            facingMode: 'environment',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        } 
+                    });
+                } catch (err) {
+                    console.log('尝试前置摄像头');
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        } 
+                    });
+                }
+                
+                video.srcObject = stream;
+                video.play();
+                
+            } catch (e) {
+                closeCameraOverlay();
+                console.error('摄像头打开失败:', e);
+                let errorMsg = '无法访问摄像头';
+                if (e.name === 'NotAllowedError') {
+                    errorMsg = '摄像头权限被拒绝\n\n请按以下步骤操作:\n1. 点击浏览器地址栏左侧的🔒图标\n2. 在"权限"中找到"摄像头"\n3. 选择"允许"\n4. 刷新页面后重试';
+                } else if (e.name === 'NotFoundError') {
+                    errorMsg = '未找到摄像头设备';
+                } else if (e.name === 'NotReadableError') {
+                    errorMsg = '摄像头被其他应用占用，请关闭其他使用摄像头的程序';
+                } else {
+                    errorMsg += ': ' + e.message;
+                }
+                alert(errorMsg);
+            }
+        }
+        
+        async function captureAndRecognize(video) {
+            const apiKey = document.getElementById('baiduApiKey').value;
+            const secretKey = document.getElementById('baiduSecretKey').value;
+            
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+                
+                closeCameraOverlay();
+                
+                const base64Image = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+                await recognizeAndShowResult(base64Image, apiKey, secretKey);
+                
+            } catch (e) {
+                closeCameraOverlay();
+                alert('拍照失败: ' + e.message);
+            }
+        }
+        
+        async function uploadAndRecognize(file) {
+            const apiKey = document.getElementById('baiduApiKey').value;
+            const secretKey = document.getElementById('baiduSecretKey').value;
+            
+            closeCameraOverlay();
+            
+            try {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const base64Image = e.target.result.split(',')[1];
+                    await recognizeAndShowResult(base64Image, apiKey, secretKey);
+                };
+                reader.readAsDataURL(file);
+            } catch (e) {
+                alert('图片读取失败: ' + e.message);
+            }
+        }
+        
+        async function recognizeAndShowResult(imageBase64, apiKey, secretKey) {
+            try {
+                const token = await getBaiduAccessToken(apiKey, secretKey);
+                const result = await recognizeText(token, imageBase64);
+                
+                const numbers = extractNumbers(result);
+                if (numbers.length > 0) {
+                    const text = numbers.join('\n');
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        alert(`🎉 识别成功！\n\n识别到的数字：\n${text}\n\n已自动复制到剪贴板`);
+                    } catch (clipboardErr) {
+                        alert(`🎉 识别成功！\n\n识别到的数字：\n${text}\n\n（复制剪贴板失败，请手动复制）`);
+                    }
+                } else {
+                    alert('未识别到数字，请确保图片清晰且包含数字');
+                }
+            } catch (e) {
+                console.error('识别失败:', e);
+                alert('识别失败: ' + e.message);
+            }
+        }
+        
+        async function getBaiduAccessToken(apiKey, secretKey) {
+            const proxies = [
+                'https://api.allorigins.win/raw?url=',
+                'https://cors.bridged.cc/',
+                'https://cors-anywhere.herokuapp.com/'
+            ];
+            
+            for (const proxyUrl of proxies) {
+                try {
+                    const encodedApiKey = encodeURIComponent(apiKey);
+                    const encodedSecretKey = encodeURIComponent(secretKey);
+                    const targetUrl = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${encodedApiKey}&client_secret=${encodedSecretKey}`;
+                    
+                    let fullUrl = '';
+                    if (proxyUrl.includes('allorigins')) {
+                        fullUrl = proxyUrl + encodeURIComponent(targetUrl);
+                    } else {
+                        fullUrl = proxyUrl + targetUrl;
+                    }
+                    
+                    const response = await fetch(fullUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        timeout: 10000
+                    });
+                    
+                    if (!response.ok) continue;
+                    
+                    const data = await response.json();
+                    if (data.access_token) return data.access_token;
+                    if (data.error) throw new Error(data.error_description || data.error);
+                } catch (e) {
+                    console.log(`代理 ${proxyUrl} 失败:`, e.message);
+                    continue;
+                }
+            }
+            
+            throw new Error('所有代理服务器都无法连接，请检查网络或稍后重试');
+        }
+        
+        async function recognizeText(token, imageBase64) {
+            const proxies = [
+                'https://api.allorigins.win/raw?url=',
+                'https://cors.bridged.cc/',
+                'https://cors-anywhere.herokuapp.com/'
+            ];
+            
+            for (const proxyUrl of proxies) {
+                try {
+                    const targetUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?image=${encodeURIComponent(imageBase64)}&access_token=${token}`;
+                    
+                    let fullUrl = '';
+                    if (proxyUrl.includes('allorigins')) {
+                        fullUrl = proxyUrl + encodeURIComponent(targetUrl);
+                    } else {
+                        fullUrl = proxyUrl + targetUrl;
+                    }
+                    
+                    const response = await fetch(fullUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        timeout: 15000
+                    });
+                    
+                    if (!response.ok) continue;
+                    
+                    const data = await response.json();
+                    if (data.error_code) throw new Error(`[${data.error_code}] ${data.error_msg}`);
+                    return data;
+                } catch (e) {
+                    console.log(`代理 ${proxyUrl} 失败:`, e.message);
+                    continue;
+                }
+            }
+            
+            throw new Error('所有代理服务器都无法连接，请检查网络或稍后重试');
+        }
+        
+        function extractNumbers(result) {
+            const numbers = [];
+            if (result.words_result) {
+                result.words_result.forEach(item => {
+                    const matches = item.words.match(/[\d.]+/g);
+                    if (matches) numbers.push(...matches);
+                });
+            }
+            return numbers;
+        }
+        
+        function printBill(type) {
+            const printWindow = window.open('', '_blank');
+            const price = type === 'electric' ? document.getElementById('electricPrice').value : document.getElementById('waterPrice').value;
+            const startDate = document.getElementById(type === 'summary' ? 'summaryStartDate' : 'statStartDate').value;
+            const endDate = document.getElementById(type === 'summary' ? 'summaryEndDate' : 'statEndDate').value;
+            
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+            };
+            
+            let html = `
+                <!DOCTYPE html><html><head><title>和顺家园${type === 'electric' ? '电费' : type === 'water' ? '水费' : '水电费合计'}记录单</title>
+                <style>@page { margin: 20px; } body { font-family: 'Microsoft YaHei', 'SimHei', sans-serif; font-size: 14px; }
+                h1 { text-align: center; font-size: 24px; margin: 20px 0; }
+                .date-row { text-align: center; margin: 15px 0; font-size: 16px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                th { background: #f5f5f5; font-weight: bold; }
+                .room-header { background: #333; color: white; font-weight: bold; }
+                .unread { color: #666; font-style: italic; }
+                .price-footer { text-align: right; margin-top: 20px; padding-right: 20px; }
+                </style></head><body>
+                <h1>和顺家园${type === 'electric' ? '电费' : type === 'water' ? '水费' : '水电费合计'}记录单</h1>
+                <div class="date-row">${type !== 'summary' ? (type === 'electric' ? '用电' : '用水') + '时间：' : ''}${formatDate(startDate)} 至 ${formatDate(endDate)}</div>
+            `;
+            
+            if (type === 'electric') {
+                const record = electricRecords.find(r => r.startDate === startDate && r.endDate === endDate);
+                if (record) {
+                    html += `<table style="width:100%;border-collapse:collapse;border:1px solid #000;margin-top:20px;"><thead><tr>`;
+                    html += `<th style="width:15%;background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">房号</th>`;
+                    html += `<th style="width:35%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">上次抄表度数（度）</th>`;
+                    html += `<th style="width:25%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">本次抄表度数（度）</th>`;
+                    html += `<th style="width:12%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">用电量</th>`;
+                    html += `<th style="width:8%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;">签字</th>`;
+                    html += `</tr></thead><tbody>`;
+                    
+                    record.rooms.forEach(room => {
+                        const types = room.electricTypes.filter(t => t !== undefined && t !== null && (!t.type || t.type.trim()));
+                        const validTypes = types.length > 0 ? types : [{lastReading: '', currentReading: '', isUnread: false}];
+                        const rowCount = validTypes.length;
+                        let totalUsage = 0;
+                        let totalAmount = 0;
+                        
+                        validTypes.forEach((typeData) => {
+                            const usage = typeData.isUnread || !typeData.lastReading || !typeData.currentReading || isNaN(typeData.lastReading) || isNaN(typeData.currentReading) ? 0 : (parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading));
+                            totalUsage += usage;
+                            totalAmount += usage * parseFloat(price);
+                        });
+                        
+                        validTypes.forEach((typeData, typeIndex) => {
+                            const lastReading = typeData.lastReading;
+                            const lastWithNote = lastReading ? (typeData.type && typeData.type.trim() ? `${lastReading}（${typeData.type}）` : lastReading) : '';
+                            const currentReading = typeData.isUnread ? '未抄' : typeData.currentReading;
+                            const currentWithNote = currentReading && currentReading !== '未抄' ? (typeData.type && typeData.type.trim() ? `${currentReading}（${typeData.type}）` : currentReading) : currentReading;
+                            
+                            html += `<tr>`;
+                            if (typeIndex === 0) {
+                                html += `<td rowspan="${rowCount}" style="background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${room.roomNo}</td>`;
+                            }
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${lastWithNote || '-'}</td>`;
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;${typeData.isUnread ? 'color:#666;font-style:italic;' : ''}">${currentWithNote || '-'}</td>`;
+                            if (typeIndex === 0) {
+                                html += `<td rowspan="${rowCount}" style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${totalUsage.toFixed(1)}</td>`;
+                                html += `<td rowspan="${rowCount}" style="text-align:center;padding:8px;border-bottom:1px solid #000;"></td>`;
+                            }
+                            html += `</tr>`;
+                        });
+                    });
+                    
+                    html += `</tbody></table>`;
+                }
+            } else if (type === 'water') {
+                const record = waterRecords.find(r => r.startDate === startDate && r.endDate === endDate);
+                if (record) {
+                    html += `<table style="width:100%;border-collapse:collapse;border:1px solid #000;margin-top:20px;"><thead><tr>`;
+                    html += `<th style="width:10%;background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">房号</th>`;
+                    html += `<th colspan="2" style="width:24%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">上次抄表方数（方）</th>`;
+                    html += `<th colspan="2" style="width:24%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">本次抄表方数（方）</th>`;
+                    html += `<th style="width:12%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">用水量</th>`;
+                    html += `<th style="width:14%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">本次实交水费（元）</th>`;
+                    html += `<th style="width:6%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;">签字</th>`;
+                    html += `</tr></thead><tbody>`;
+                    
+                    record.rooms.forEach(room => {
+                        const types = room.waterTypes.filter(t => t && t.type && t.type.trim());
+                        const validTypes = types.length > 0 ? types : [{type: '冷水', lastReading: '', currentReading: '', isUnread: false}];
+                        const rowCount = validTypes.length;
+                        let totalUsage = 0;
+                        let totalAmount = 0;
+                        
+                        validTypes.forEach((typeData) => {
+                            const usage = typeData.isUnread || !typeData.lastReading || !typeData.currentReading || isNaN(typeData.lastReading) || isNaN(typeData.currentReading) ? 0 : (parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading));
+                            totalUsage += usage;
+                            totalAmount += usage * parseFloat(price);
+                        });
+                        
+                        validTypes.forEach((typeData, typeIndex) => {
+                            const lastReading = typeData.lastReading;
+                            const lastWithNote = lastReading ? `${lastReading}${typeData.note ? '（' + typeData.note + '）' : ''}` : '';
+                            const currentReading = typeData.isUnread ? '未抄' : typeData.currentReading;
+                            const currentType = typeData.type === '热水' ? '热水' : '冷水';
+                            
+                            html += `<tr>`;
+                            if (typeIndex === 0) {
+                                html += `<td rowspan="${rowCount}" style="background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${room.roomNo}</td>`;
+                            }
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${typeData.type}</td>`;
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${lastWithNote || '-'}</td>`;
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${currentType}</td>`;
+                            html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;${typeData.isUnread ? 'color:#666;font-style:italic;' : ''}">${currentReading || '-'}</td>`;
+                            if (typeIndex === 0) {
+                                html += `<td rowspan="${rowCount}" style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${totalUsage.toFixed(1)}</td>`;
+                                html += `<td rowspan="${rowCount}" style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">¥${totalAmount.toFixed(1)}</td>`;
+                                html += `<td rowspan="${rowCount}" style="text-align:center;padding:8px;border-bottom:1px solid #000;"></td>`;
+                            }
+                            html += `</tr>`;
+                        });
+                    });
+                    
+                    html += `</tbody></table>`;
+                }
+            } else {
+                const start = document.getElementById('summaryStartDate').value;
+                const end = document.getElementById('summaryEndDate').value;
+                const electricPrice = parseFloat(document.getElementById('electricPrice').value) || DEFAULT_ELECTRIC_PRICE;
+                const waterPrice = parseFloat(document.getElementById('waterPrice').value) || DEFAULT_WATER_PRICE;
+                
+                const waterRecord = waterRecords.find(r => r.startDate === start && r.endDate === end);
+                const electricRecord = electricRecords.find(r => r.startDate === start && r.endDate === end);
+                
+                const roomTotals = {};
+                
+                if (waterRecord) {
+                    waterRecord.rooms.forEach(room => {
+                        let roomWater = 0;
+                        room.waterTypes.forEach(typeData => {
+                            if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                                const usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                                roomWater += Math.max(0, usage) * waterPrice;
+                            }
+                        });
+                        if (!roomTotals[room.roomNo]) roomTotals[room.roomNo] = { water: 0, electric: 0 };
+                        roomTotals[room.roomNo].water = roomWater;
+                    });
+                }
+                
+                if (electricRecord) {
+                    electricRecord.rooms.forEach(room => {
+                        let roomElectric = 0;
+                        room.electricTypes.forEach(typeData => {
+                            if (!typeData.isUnread && typeData.lastReading && typeData.currentReading && !isNaN(typeData.lastReading) && !isNaN(typeData.currentReading)) {
+                                const usage = parseFloat(typeData.currentReading) - parseFloat(typeData.lastReading);
+                                roomElectric += Math.max(0, usage) * electricPrice;
+                            }
+                        });
+                        if (!roomTotals[room.roomNo]) roomTotals[room.roomNo] = { water: 0, electric: 0 };
+                        roomTotals[room.roomNo].electric = roomElectric;
+                    });
+                }
+                
+                html += `<table style="width:100%;border-collapse:collapse;border:1px solid #000;margin-top:20px;">`;
+                html += `<thead><tr>`;
+                html += `<th style="width:20%;background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">房号</th>`;
+                html += `<th style="width:50%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">水费+电费</th>`;
+                html += `<th style="width:15%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;">合计</th>`;
+                html += `<th style="width:15%;background:#f5f5f5;font-weight:bold;text-align:center;padding:8px;">签字</th>`;
+                html += `</tr></thead><tbody>`;
+                
+                Object.keys(roomTotals).sort().forEach(roomNo => {
+                    const totals = roomTotals[roomNo];
+                    const total = totals.water + totals.electric;
+                    html += `<tr>`;
+                    html += `<td style="background:#333;color:white;font-weight:bold;text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">${roomNo}</td>`;
+                    html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">¥${totals.water.toFixed(2)} + ¥${totals.electric.toFixed(2)}</td>`;
+                    html += `<td style="text-align:center;padding:8px;border-right:1px solid #000;border-bottom:1px solid #000;">¥${total.toFixed(2)}</td>`;
+                    html += `<td style="text-align:center;padding:8px;border-bottom:1px solid #000;"></td>`;
+                    html += `</tr>`;
+                });
+                
+                html += `</tbody></table>`;
+            }
+            
+            if (type !== 'summary') {
+                html += `<div class="price-footer">${type === 'electric' ? '电价：' : '说明：水费单价：'}<span>${price}</span>${type === 'electric' ? '元/度' : '元/方'}</div>`;
+            }
+            html += `</body></html>`;
+            
+            printWindow.document.write(html);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => printWindow.print(), 500);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+            
+            document.getElementById('statStartDate').addEventListener('change', () => syncDateChange('electric'));
+            document.getElementById('statEndDate').addEventListener('change', () => syncDateChange('electric'));
+            document.getElementById('waterStatStartDate').addEventListener('change', () => syncDateChange('water'));
+            document.getElementById('waterStatEndDate').addEventListener('change', () => syncDateChange('water'));
+            document.getElementById('summaryStartDate').addEventListener('change', () => syncDateChange('summary'));
+            document.getElementById('summaryEndDate').addEventListener('change', () => syncDateChange('summary'));
+            
+            document.getElementById('electricPrice').addEventListener('input', () => {
+                calculateElectric();
+            });
+            
+            document.getElementById('waterPrice').addEventListener('input', () => {
+                calculateWater();
+            });
+            
+            document.getElementById('fileInput').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) uploadData(file);
+            });
+            
+            const container = document.querySelector('.container');
+            container.addEventListener('scroll', (e) => {
+                const scrollTop = e.target.scrollTop;
+                const body = document.body;
+                body.style.backgroundPosition = `50% ${50 - scrollTop * 0.05}%`;
+            });
+        });
+    </script>
+</body>
+</html>
