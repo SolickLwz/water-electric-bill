@@ -1854,81 +1854,68 @@
         }
         
         async function getBaiduAccessToken(apiKey, secretKey) {
-            const proxies = [
-                'https://api.allorigins.win/raw?url=',
-                'https://cors.bridged.cc/',
-                'https://cors-anywhere.herokuapp.com/'
-            ];
-            
-            for (const proxyUrl of proxies) {
-                try {
-                    const encodedApiKey = encodeURIComponent(apiKey);
-                    const encodedSecretKey = encodeURIComponent(secretKey);
-                    const targetUrl = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${encodedApiKey}&client_secret=${encodedSecretKey}`;
-                    
-                    let fullUrl = '';
-                    if (proxyUrl.includes('allorigins')) {
-                        fullUrl = proxyUrl + encodeURIComponent(targetUrl);
-                    } else {
-                        fullUrl = proxyUrl + targetUrl;
+            try {
+                const encodedApiKey = encodeURIComponent(apiKey);
+                const encodedSecretKey = encodeURIComponent(secretKey);
+                
+                const response = await fetch(`https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${encodedApiKey}&client_secret=${encodedSecretKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
                     }
-                    
-                    const response = await fetch(fullUrl, {
-                        method: 'GET',
-                        headers: { 'Accept': 'application/json' },
-                        timeout: 10000
-                    });
-                    
-                    if (!response.ok) continue;
-                    
-                    const data = await response.json();
-                    if (data.access_token) return data.access_token;
-                    if (data.error) throw new Error(data.error_description || data.error);
-                } catch (e) {
-                    console.log(`代理 ${proxyUrl} 失败:`, e.message);
-                    continue;
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => null);
+                    const errorMsg = errorData?.error_description || errorData?.error || `HTTP错误: ${response.status}`;
+                    throw new Error(errorMsg);
                 }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(`获取Token失败: ${data.error_description || data.error}`);
+                }
+                
+                if (!data.access_token) {
+                    throw new Error('未获取到访问令牌');
+                }
+                
+                return data.access_token;
+            } catch (e) {
+                console.error('获取AccessToken失败:', e);
+                throw new Error('获取访问令牌失败: ' + e.message);
             }
-            
-            throw new Error('所有代理服务器都无法连接，请检查网络或稍后重试');
         }
         
         async function recognizeText(token, imageBase64) {
-            const proxies = [
-                'https://api.allorigins.win/raw?url=',
-                'https://cors.bridged.cc/',
-                'https://cors-anywhere.herokuapp.com/'
-            ];
-            
-            for (const proxyUrl of proxies) {
-                try {
-                    const targetUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?image=${encodeURIComponent(imageBase64)}&access_token=${token}`;
-                    
-                    let fullUrl = '';
-                    if (proxyUrl.includes('allorigins')) {
-                        fullUrl = proxyUrl + encodeURIComponent(targetUrl);
-                    } else {
-                        fullUrl = proxyUrl + targetUrl;
-                    }
-                    
-                    const response = await fetch(fullUrl, {
-                        method: 'GET',
-                        headers: { 'Accept': 'application/json' },
-                        timeout: 15000
-                    });
-                    
-                    if (!response.ok) continue;
-                    
-                    const data = await response.json();
-                    if (data.error_code) throw new Error(`[${data.error_code}] ${data.error_msg}`);
-                    return data;
-                } catch (e) {
-                    console.log(`代理 ${proxyUrl} 失败:`, e.message);
-                    continue;
+            try {
+                const response = await fetch('https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
+                    },
+                    body: `image=${encodeURIComponent(imageBase64)}&access_token=${token}`
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => null);
+                    throw new Error(`API调用失败 (${response.status}): ${errorData?.error_msg || '未知错误'}`);
                 }
+                
+                const data = await response.json();
+                
+                if (data.error_code) {
+                    throw new Error(`识别失败 [${data.error_code}]: ${data.error_msg}`);
+                }
+                
+                return data;
+            } catch (e) {
+                console.error('识别API调用失败:', e);
+                throw e;
             }
-            
-            throw new Error('所有代理服务器都无法连接，请检查网络或稍后重试');
         }
         
         function extractNumbers(result) {
