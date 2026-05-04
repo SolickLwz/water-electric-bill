@@ -1854,12 +1854,12 @@
         }
         
         async function getBaiduAccessToken(apiKey, secretKey) {
-            const proxyUrl = 'https://daili.1304599093.workers.dev/?url=';
+            const proxyUrl = '/proxy?url=';
             try {
                 const targetUrl = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${encodeURIComponent(apiKey)}&client_secret=${encodeURIComponent(secretKey)}`;
                 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
                 
                 const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
                     method: 'GET',
@@ -1887,7 +1887,7 @@
         }
         
         async function recognizeText(token, imageBase64) {
-            const proxyUrl = 'https://daili.1304599093.workers.dev/?url=';
+            const proxyUrl = '/proxy?url=';
             try {
                 const targetUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=${token}`;
                 
