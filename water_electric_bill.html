@@ -1885,11 +1885,16 @@
                         url = proxy + targetUrl;
                     }
                     
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000);
+                    
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: { 'Accept': 'application/json' },
-                        signal: AbortController.timeout(15000)
+                        signal: controller.signal
                     });
+                    
+                    clearTimeout(timeoutId);
                     
                     if (!response.ok) continue;
                     
@@ -1936,11 +1941,16 @@
                         url = proxy + targetUrl;
                     }
                     
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000);
+                    
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: { 'Accept': 'application/json' },
-                        signal: AbortController.timeout(15000)
+                        signal: controller.signal
                     });
+                    
+                    clearTimeout(timeoutId);
                     
                     if (!response.ok) continue;
                     
