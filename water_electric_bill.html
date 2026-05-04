@@ -247,11 +247,11 @@
         .btn-camera { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); }
         
         .add-btn, .del-btn { 
-            width: 36px; 
-            height: 36px; 
+            width: 28px; 
+            height: 28px; 
             border-radius: 50%; 
             border: none; 
-            font-size: 20px; 
+            font-size: 16px; 
             cursor: pointer; 
             transition: all 0.2s ease; 
             flex-shrink: 0;
@@ -306,7 +306,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th, td { padding: 2%; text-align: center; border-bottom: 1px solid #e0e0e0; font-size: 2.4vw; color: #333; }
+        th, td { padding: 2%; text-align: center; border-bottom: 1px solid #e0e0e0; font-size: 3vw; color: #333; }
         th { background: #f8f9fa; font-weight: 600; color: #495057; }
         .input-cell { 
             width: 100%; 
@@ -314,14 +314,14 @@
             border-radius: 6px; 
             padding: 5%; 
             text-align: center; 
-            font-size: 2.4vw; 
+            font-size: 3vw; 
             background: rgba(255, 255, 255, 0.9);
             color: #333;
             transition: all 0.2s ease;
         }
         .input-cell:focus { outline: none; border-color: #11998e; box-shadow: 0 0 0 2px rgba(17, 153, 142, 0.2); }
         .input-cell.unread { color: #6c757d; font-style: italic; }
-        .note-input { width: 100%; border: none; border-bottom: 1px dashed #ddd; padding: 2%; font-size: 2vw; color: #666; background: transparent; }
+        .note-input { width: 100%; border: none; border-bottom: 1px dashed #ddd; padding: 2%; font-size: 2.6vw; color: #666; background: transparent; }
         
         .price-display { 
             background: rgba(255,255,255,0.95); 
@@ -346,9 +346,9 @@
             background: rgba(255, 193, 7, 0.3); 
             color: #fff; 
             border: 1px solid rgba(255, 193, 7, 0.5); 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            font-size: 2vw; 
+            padding: 8px 16px; 
+            border-radius: 6px; 
+            font-size: 2.8vw; 
             cursor: pointer;
             transition: all 0.2s ease;
             animation: bounceIn 0.3s ease-out;
@@ -406,6 +406,9 @@
         
         .action-btns { display: flex; gap: 1.5%; margin: 1.5%; flex-wrap: wrap; }
         .action-btns .btn { flex: 1; min-width: 45%; }
+        
+        .camera-section { display: flex; justify-content: flex-end; margin: 1.5%; }
+        .camera-section .btn-camera { min-width: auto; }
         
         .hidden { display: none; }
         
@@ -1205,8 +1208,8 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><span class="water-type">${typeData.type || '—'}</span></td>
-                    <td><input type="text" class="input-cell" value="${typeData.lastReading}" onchange="updateElectricField(${typeIndex}, 'lastReading', this.value)"></td>
-                    <td><input type="text" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateElectricField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td><input type="number" class="input-cell" value="${typeData.lastReading}" onchange="updateElectricField(${typeIndex}, 'lastReading', this.value)"></td>
+                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateElectricField(${typeIndex}, 'currentReading', this.value)"></td>
                     <td id="electricUsage-${typeIndex}">0</td>
                     <td id="electricAmount-${typeIndex}">¥0.00</td>
                     <td>
@@ -1228,7 +1231,7 @@
             document.body.appendChild(toast);
             setTimeout(() => {
                 toast.remove();
-            }, 1000);
+            }, 1500);
         }
         
         function checkUsageAlert(isWater, roomNo, typeName, currentUsage) {
@@ -1420,8 +1423,8 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><span class="water-type">${typeData.type}</span></td>
-                    <td><input type="text" class="input-cell" value="${typeData.lastReading}" onchange="updateWaterField(${typeIndex}, 'lastReading', this.value)"></td>
-                    <td><input type="text" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateWaterField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td><input type="number" class="input-cell" value="${typeData.lastReading}" onchange="updateWaterField(${typeIndex}, 'lastReading', this.value)"></td>
+                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateWaterField(${typeIndex}, 'currentReading', this.value)"></td>
                     <td id="waterUsage-${typeIndex}">0</td>
                     <td id="waterAmount-${typeIndex}">¥0.00</td>
                     <td>
