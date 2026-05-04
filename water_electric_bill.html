@@ -1855,35 +1855,15 @@
         
         async function getBaiduAccessToken(apiKey, secretKey) {
             const proxies = [
-                'https://corsproxy.io/?',
-                'https://cors.sh/',
                 'https://api.codetabs.com/v1/proxy?quest=',
-                'https://proxy.cors.sh/',
-                'https://thingproxy.freeboard.io/fetch/',
-                'https://api.allorigins.win/raw?url=',
-                'https://cors-anywhere.herokuapp.com/'
+                'http://localhost:8080/'
             ];
             
             const targetUrl = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${encodeURIComponent(apiKey)}&client_secret=${encodeURIComponent(secretKey)}`;
             
             for (const proxy of proxies) {
                 try {
-                    let url = '';
-                    if (proxy.includes('corsproxy.io')) {
-                        url = proxy + encodeURIComponent(targetUrl);
-                    } else if (proxy.includes('cors.sh') && !proxy.includes('proxy.cors')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('proxy.cors')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('codetabs')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('thingproxy')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('allorigins')) {
-                        url = proxy + encodeURIComponent(targetUrl);
-                    } else {
-                        url = proxy + targetUrl;
-                    }
+                    let url = proxy + targetUrl;
                     
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -1906,64 +1886,50 @@
                 }
             }
             
-            throw new Error('无法连接到百度API，请检查网络或稍后重试');
+            throw new Error('无法连接到百度API。请检查网络或启动本地代理服务器');
         }
         
         async function recognizeText(token, imageBase64) {
-            const proxies = [
-                'https://corsproxy.io/?',
-                'https://cors.sh/',
-                'https://api.codetabs.com/v1/proxy?quest=',
-                'https://proxy.cors.sh/',
-                'https://thingproxy.freeboard.io/fetch/',
-                'https://api.allorigins.win/raw?url=',
-                'https://cors-anywhere.herokuapp.com/'
-            ];
-            
-            const targetUrl = `https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?image=${encodeURIComponent(imageBase64)}&access_token=${token}`;
-            
-            for (const proxy of proxies) {
-                try {
-                    let url = '';
-                    if (proxy.includes('corsproxy.io')) {
-                        url = proxy + encodeURIComponent(targetUrl);
-                    } else if (proxy.includes('cors.sh') && !proxy.includes('proxy.cors')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('proxy.cors')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('codetabs')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('thingproxy')) {
-                        url = proxy + targetUrl;
-                    } else if (proxy.includes('allorigins')) {
-                        url = proxy + encodeURIComponent(targetUrl);
-                    } else {
-                        url = proxy + targetUrl;
-                    }
-                    
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 15000);
-                    
-                    const response = await fetch(url, {
-                        method: 'GET',
-                        headers: { 'Accept': 'application/json' },
-                        signal: controller.signal
-                    });
-                    
-                    clearTimeout(timeoutId);
-                    
-                    if (!response.ok) continue;
-                    
-                    const data = await response.json();
-                    if (data.error_code) throw new Error(`[${data.error_code}] ${data.error_msg}`);
-                    return data;
-                } catch (e) {
-                    console.log(`代理 ${proxy} 失败:`, e.message);
-                    continue;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                
+                const response = await fetch('http://localhost:8080/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json'
+                    },
+                    body: `url=${encodeURIComponent(`https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=${token}`)}&image=${encodeURIComponent(imageBase64)}`,
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
                 }
+                
+                const data = await response.json();
+                
+                if (data.error_code) {
+                    const errorMessages = {
+                        6: '权限不足。请检查API Key和Secret Key',
+                        17: '每日调用次数超限',
+                        18: 'QPS超限，请稍后再试',
+                        282005: '图片质量过低，请重新拍摄',
+                        216100: '图片格式错误',
+                        216101: '图片参数缺失'
+                    };
+                    const message = errorMessages[data.error_code] || data.error_msg;
+                    throw new Error(`[${data.error_code}] ${message}`);
+                }
+                
+                return data;
+            } catch (e) {
+                console.error('识别失败:', e);
+                throw new Error('识别失败: ' + e.message);
             }
-            
-            throw new Error('无法连接到百度API，请检查网络或稍后重试');
         }
         
         function extractNumbers(result) {
