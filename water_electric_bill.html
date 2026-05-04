@@ -1856,6 +1856,10 @@
         async function getBaiduAccessToken(apiKey, secretKey) {
             const proxies = [
                 'https://corsproxy.io/?',
+                'https://cors.sh/',
+                'https://api.codetabs.com/v1/proxy?quest=',
+                'https://proxy.cors.sh/',
+                'https://thingproxy.freeboard.io/fetch/',
                 'https://api.allorigins.win/raw?url=',
                 'https://cors-anywhere.herokuapp.com/'
             ];
@@ -1865,8 +1869,16 @@
             for (const proxy of proxies) {
                 try {
                     let url = '';
-                    if (proxy.includes('corsproxy')) {
+                    if (proxy.includes('corsproxy.io')) {
                         url = proxy + encodeURIComponent(targetUrl);
+                    } else if (proxy.includes('cors.sh') && !proxy.includes('proxy.cors')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('proxy.cors')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('codetabs')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('thingproxy')) {
+                        url = proxy + targetUrl;
                     } else if (proxy.includes('allorigins')) {
                         url = proxy + encodeURIComponent(targetUrl);
                     } else {
@@ -1876,7 +1888,7 @@
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: { 'Accept': 'application/json' },
-                        timeout: 15000
+                        signal: AbortController.timeout(15000)
                     });
                     
                     if (!response.ok) continue;
@@ -1895,6 +1907,10 @@
         async function recognizeText(token, imageBase64) {
             const proxies = [
                 'https://corsproxy.io/?',
+                'https://cors.sh/',
+                'https://api.codetabs.com/v1/proxy?quest=',
+                'https://proxy.cors.sh/',
+                'https://thingproxy.freeboard.io/fetch/',
                 'https://api.allorigins.win/raw?url=',
                 'https://cors-anywhere.herokuapp.com/'
             ];
@@ -1904,8 +1920,16 @@
             for (const proxy of proxies) {
                 try {
                     let url = '';
-                    if (proxy.includes('corsproxy')) {
+                    if (proxy.includes('corsproxy.io')) {
                         url = proxy + encodeURIComponent(targetUrl);
+                    } else if (proxy.includes('cors.sh') && !proxy.includes('proxy.cors')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('proxy.cors')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('codetabs')) {
+                        url = proxy + targetUrl;
+                    } else if (proxy.includes('thingproxy')) {
+                        url = proxy + targetUrl;
                     } else if (proxy.includes('allorigins')) {
                         url = proxy + encodeURIComponent(targetUrl);
                     } else {
@@ -1915,7 +1939,7 @@
                     const response = await fetch(url, {
                         method: 'GET',
                         headers: { 'Accept': 'application/json' },
-                        timeout: 15000
+                        signal: AbortController.timeout(15000)
                     });
                     
                     if (!response.ok) continue;
