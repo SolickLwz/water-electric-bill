@@ -320,7 +320,14 @@
             transition: all 0.2s ease;
         }
         .input-cell:focus { outline: none; border-color: #11998e; box-shadow: 0 0 0 2px rgba(17, 153, 142, 0.2); }
-        .input-cell.unread { color: #6c757d; font-style: italic; }
+        .input-cell.unread { 
+            background: rgba(255, 193, 7, 0.2) !important; 
+            border-color: rgba(255, 193, 7, 0.6) !important; 
+        }
+        .input-cell.unread::placeholder {
+            color: #ffc107;
+            font-style: italic;
+        }
         .note-input { width: 100%; border: none; border-bottom: 1px dashed #ddd; padding: 2%; font-size: 2.6vw; color: #666; background: transparent; }
         
         .price-display { 
@@ -1183,7 +1190,9 @@
         function toggleElectricUnread(typeIndex) {
             const type = currentElectricRoom.electricTypes[typeIndex];
             type.isUnread = !type.isUnread;
-            type.currentReading = type.isUnread ? '未抄' : '';
+            if (type.isUnread) {
+                type.currentReading = '';
+            }
             saveAllData();
             renderElectricTable();
             calculateElectric();
@@ -1191,8 +1200,8 @@
         
         function updateElectricField(typeIndex, field, value) {
             currentElectricRoom.electricTypes[typeIndex][field] = value;
-            if (field === 'currentReading') {
-                currentElectricRoom.electricTypes[typeIndex].isUnread = value === '未抄';
+            if (field === 'currentReading' && value && !isNaN(value)) {
+                currentElectricRoom.electricTypes[typeIndex].isUnread = false;
             }
             saveAllData();
             calculateElectric();
@@ -1209,7 +1218,7 @@
                 row.innerHTML = `
                     <td><span class="water-type">${typeData.type || '—'}</span></td>
                     <td><input type="number" class="input-cell" value="${typeData.lastReading}" onchange="updateElectricField(${typeIndex}, 'lastReading', this.value)"></td>
-                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateElectricField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" placeholder="${typeData.isUnread ? '未抄' : ''}" onchange="updateElectricField(${typeIndex}, 'currentReading', this.value)"></td>
                     <td id="electricUsage-${typeIndex}">0</td>
                     <td id="electricAmount-${typeIndex}">¥0.00</td>
                     <td>
@@ -1398,7 +1407,9 @@
         function toggleWaterUnread(typeIndex) {
             const type = currentWaterRoom.waterTypes[typeIndex];
             type.isUnread = !type.isUnread;
-            type.currentReading = type.isUnread ? '未抄' : '';
+            if (type.isUnread) {
+                type.currentReading = '';
+            }
             saveAllData();
             renderWaterTable();
             calculateWater();
@@ -1406,8 +1417,8 @@
         
         function updateWaterField(typeIndex, field, value) {
             currentWaterRoom.waterTypes[typeIndex][field] = value;
-            if (field === 'currentReading') {
-                currentWaterRoom.waterTypes[typeIndex].isUnread = value === '未抄';
+            if (field === 'currentReading' && value && !isNaN(value)) {
+                currentWaterRoom.waterTypes[typeIndex].isUnread = false;
             }
             saveAllData();
             calculateWater();
@@ -1424,7 +1435,7 @@
                 row.innerHTML = `
                     <td><span class="water-type">${typeData.type}</span></td>
                     <td><input type="number" class="input-cell" value="${typeData.lastReading}" onchange="updateWaterField(${typeIndex}, 'lastReading', this.value)"></td>
-                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" onchange="updateWaterField(${typeIndex}, 'currentReading', this.value)"></td>
+                    <td><input type="number" class="input-cell ${typeData.isUnread ? 'unread' : ''}" value="${typeData.currentReading}" placeholder="${typeData.isUnread ? '未抄' : ''}" onchange="updateWaterField(${typeIndex}, 'currentReading', this.value)"></td>
                     <td id="waterUsage-${typeIndex}">0</td>
                     <td id="waterAmount-${typeIndex}">¥0.00</td>
                     <td>
